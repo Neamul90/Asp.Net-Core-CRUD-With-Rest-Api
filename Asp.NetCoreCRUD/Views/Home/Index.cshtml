@@ -1,0 +1,347 @@
+﻿@{
+    ViewData["Title"] = "Users";
+}
+<style>
+    .table-bordered td {
+        border: 1px solid #d1d1d1;
+    }
+
+    .dataTables_paginate {
+        width: 100%;
+    }
+
+    .invalid-feedback {
+        display: block;
+    }
+</style>
+<div class="row">
+    <div class="col-xl-12">
+        <h3 class="text-center mb-3">Users Setup</h3>
+
+        <div class="card">
+            <div class="card-body card-buttons">
+
+                <div class="row mt-3">
+                    <div class="col-xl-8">
+                        <div class="table-responsive">
+                            <table class="table table-stripped table-hover datatable" id="example1">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Role</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-4">
+                        <form id="userForm">
+
+                            <input type="hidden" class="form-control" name="Id" id="id">
+                            <h5 class="card-title text-center">User</h5>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">First Name</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" name="FirstName" id="firstName" required>
+                                    <div class="invalid-feedback" id="firstName_error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Last Name</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" name="LastName" id="lastName" required>
+                                    <div class="invalid-feedback" id="lastName_error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Role</label>
+                                <div class="col-lg-9">
+                                    <select name="Role" id="role" class="form-control" asp-items="Html.GetEnumSelectList<Role>()">
+                                        <option selected="selected" value="">Please Select Role</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="role_error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Email</label>
+                                <div class="col-lg-9">
+                                    <input type="email" class="form-control" name="Email" id="email" required>
+                                    <div class="invalid-feedback" id="email_error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Password</label>
+                                <div class="col-lg-9">
+                                    <input type="password" class="form-control" name="Password" id="password" required>
+                                    <div class="invalid-feedback" id="password_error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-form-label">Confirm Password</label>
+                                <div class="col-lg-9">
+                                    <input type="password" class="form-control" name="ConfirmPassword" id="confirmPassword" required>
+                                    <div class="invalid-feedback" id="confirmPassword_error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary" id="submit_btn">Submit</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-left",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        $(document).ready(function () {
+
+            getData();
+            $("#userForm").submit(function (event) {
+                event.preventDefault();
+               var id= $("#id").val();
+               if(id>0){
+                    let formData = {
+                        id: $("#id").val(),
+                        firstName: $("#firstName").val(),
+                        lastName: $("#lastName").val(),
+                        role: $("#role").val(),
+                        email: $("#email").val(),
+                        password: $("#password").val(),
+                        confirmPassword: $("#confirmPassword").val(),
+                    }
+                    $.ajax({
+                        type: 'PUT',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify(formData),
+                        url: 'https://localhost:7274/api/Users/'+id,
+                        success: function (result) {
+                            toastr.success(result.message);
+                            getData();
+                            $('.invalid-feedback').css('display', 'none');
+                            $('#userForm').trigger("reset");
+
+                        },
+                        error: function (result) {
+                          
+                            $.each(result.responseJSON.errors, function (name, val) {
+                                if (name == "FirstName") {
+                                    $("#firstName_error").text(val)
+                                }
+                                if (name == "LastName") {
+                                    $("#lastName_error").text(val)
+                                }
+                                if (name == "Role") {
+                                    $("#role_error").text(val)
+                                }
+                                if (name == "Email") {
+                                    $("#email_error").text(val)
+                                }
+                                if (name == "Password") {
+                                    $("#password_error").text(val)
+                                }
+                                if (name == "ConfirmPassword") {
+                                    $("#confirmPassword_error").text(val)
+                                }
+                            });
+                            $('.invalid-feedback').css('display', 'block');
+                            if (result.responseJSON.message != null) {
+                                $("#email_error").text(result.responseJSON.message)
+                            }
+                        }
+                    });
+
+               }else{
+                    let formData = {
+                        firstName: $("#firstName").val(),
+                        lastName: $("#lastName").val(),
+                        role: $("#role").val(),
+                        email: $("#email").val(),
+                        password: $("#password").val(),
+                        confirmPassword: $("#confirmPassword").val(),
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify(formData),
+                        url: 'https://localhost:7274/api/Users',
+                        success: function (result) {
+                            toastr.success(result.message);
+                            getData();
+                            $('.invalid-feedback').css('display', 'none');
+                            $('#userForm').trigger("reset");
+
+                        },
+                        error: function (result) {
+
+                            $.each(result.responseJSON.errors, function (name, val) {
+                                if (name == "FirstName") {
+                                    $("#firstName_error").text(val)
+                                }
+                                if (name == "LastName") {
+                                    $("#lastName_error").text(val)
+                                }
+                                if (name == "Role") {
+                                    $("#role_error").text(val)
+                                }
+                                if (name == "Email") {
+                                    $("#email_error").text(val)
+                                }
+                                if (name == "Password") {
+                                    $("#password_error").text(val)
+                                }
+                                if (name == "ConfirmPassword") {
+                                    $("#confirmPassword_error").text(val)
+                                }
+                            });
+                            console.log(result);
+                        }
+                    });
+
+
+               }
+
+              
+            });
+
+
+        });
+        function getData(){
+            $.ajax({
+                url: "https://localhost:7274/api/Users",
+                type: "GET",
+                success: function (response) {
+                    $('#example1').DataTable({
+                        "destroy": true,
+                        "width": "100%!important",
+                        "lengthMenu": [50, 75, 100],
+                        "data": response,
+                        "columns": [
+
+                            { "data": "id", "title": "id", "visible": false },
+                            { "data": "firstName", "title": "Firstname" },
+                            { "data": "lastName", "title": "Lastname" },
+                            { "data": "role", "title": "Role" },
+                            { "data": "email", "title": "Email" },
+                            {
+                                'mRender': function (data, type, full) {
+                                    return `<div class='d-flex align-items-center'><a class='btn-action-icon me-2' href='javascript: void (0);' onclick='edit(${full.id})'><i class='fe fe-edit'></i></a><a class='btn-action-icon' href ='javascript:void(0);'
+                                                    onclick = 'Delete(${full.id})' > <i class='fe fe-trash-2' > </i></a > </div>`;
+                                },
+                                "orderable": false,
+                                "searchable": false
+                            }
+                        ]
+                    });
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+        function edit(id) {
+            $.ajax({
+                url: "https://localhost:7274/api/Users/" + id,
+                type: "GET",
+                success: function (response) {
+                    console.log(response)
+                    $("#id").val(response.id);
+                    $("#firstName").val(response.firstName);
+                    $("#lastName").val(response.lastName);
+                    var roleId = response.role == "Admin" ? 0 : 1;
+                    $("#role").val(roleId).trigger("change");
+                    $("#email").val(response.email);
+                    $("#password").val(response.passwordHash);
+                    $("#confirmPassword").val(response.passwordHash);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+        }
+        function Delete(id) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'mr-2 btn btn-danger'
+                },
+                buttonsStyling: false,
+                animation: false,
+                allowOutsideClick: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't delete this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    swalWithBootstrapButtons.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success',
+
+                    ).then((sucess) => {
+                        // Fire Delete Method
+                        $.ajax({
+                            url: "https://localhost:7274/api/Users/" + id,
+                            type: "DELETE",
+                            success: function (response) {
+                                location.reload();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(textStatus, errorThrown);
+                            }
+                        });
+                    })
+
+                }
+            })
+        }
+
+    </script>
+}

@@ -1,0 +1,71 @@
+﻿@model Asp.NetCoreCRUD.Models.Auth.AuthenticationRequest
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from kanakku.dreamguystech.com/html/template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 05:50:07 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Login</title>
+
+    <link rel="shortcut icon" href="~/assets/img/favicon.png">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/style.css">
+</head>
+<body>
+
+    <div class="main-wrapper login-body">
+        <div class="login-wrapper">
+            <div class="container">
+                <img class="img-fluid logo-dark mb-2" src="~/assets/img/logo2.png" alt="Logo">
+                <div class="loginbox">
+                    <div class="login-right">
+                        <div class="login-right-wrap">
+                            <h1>Login</h1>
+                            <p class="account-subtitle">Access to our dashboard</p>
+                            <form asp-action="Index" method="post">
+
+                                <div class="form-group">
+                                    <label class="form-control-label">Email Address</label>
+                                    <input type="email" class="form-control" name="Email" value="@Model.Email">
+                                    @if (ViewBag.Email != null)
+                                    {
+                                        <span class="text-danger">@ViewBag.Email</span>
+                                    }
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">Password</label>
+                                    <div class="pass-group">
+                                        <input type="password" class="form-control pass-input" value="@Model.Password" name="Password">
+                                        <span class="fas fa-eye toggle-password"></span>
+                                        @if (ViewBag.Password != null)
+                                        {
+                                            <span class="text-danger">@ViewBag.Password</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-lg btn-block btn-primary w-100" type="submit">Login</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="assets/js/jquery-3.7.0.min.js"></script>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

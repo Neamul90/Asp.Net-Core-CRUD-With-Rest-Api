@@ -1,0 +1,127 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>
+        @ViewData["Title"]
+    </title>
+
+    <link rel="shortcut icon" href="~/assets/img/favicon.png">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/fontawesome/css/all.min.css">
+
+    <link rel="stylesheet" href="~/assets/plugins/feather/feather.css">
+
+    <link rel="stylesheet" href="~/assets/css/bootstrap-datetimepicker.min.css">
+
+    <link rel="stylesheet" href="~/assets/plugins/datatables/datatables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="~/assets/plugins/select2/css/select2.min.css">
+
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+</head>
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="header header-one">
+       @*     <a href="javascript:void(0);" id="toggle_btn">
+                <span class="toggle-bars" style="display: block;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 18px;
+    border-radius: 50px;
+    box-shadow: 0px 2px 3px rgb(215, 197, 255);
+    border: 1px solid #e6ebf1;
+    color: #7638ff;
+    margin: 5px;">
+                    <i class="fe fe-home"></i>
+                </span>
+            </a>*@
+             @if (User.Identity.IsAuthenticated)
+            {
+
+                <ul class="nav nav-tabs user-menu">
+
+             
+               
+
+                <li class="nav-item dropdown">
+                    <a href="javascript:void(0)" class="user-link  nav-link" data-bs-toggle="dropdown">
+                        <span class="user-img">
+                            <img src="~/assets/img/profiles/avatar-07.jpg" alt="img" class="profilesidebar">
+                            <span class="animate-circle"></span>
+                        </span>
+                        <span class="user-content">
+                                <span class="user-name">@User.Identity.Name</span>
+
+                        </span>
+
+                    </a>
+
+                </li>
+                ||
+                    <li class="nav-item">
+                        <a class="dropdown-item" href="@Url.Action("Logout","Login")">Log Out</a>
+
+                    </li>
+            </ul>
+            }
+            else
+            {
+                Context.Response.Redirect(Url.Content("~/Login/Index"));
+            }
+        </div>
+
+
+       
+
+
+        <div class="page-wrapper">
+            <div class="content container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="~/assets/js/jquery-3.7.0.min.js"></script>
+
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+
+    <script src="~/assets/plugins/datatables/datatables.min.js"></script>
+@*    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>*@
+    <script src="~/assets/plugins/select2/js/select2.min.js"></script>
+    <script src="~/assets/plugins/select2/js/custom-select.js"></script>
+
+    <script src="~/assets/js/feather.min.js"></script>
+
+    <script src="~/assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <script src="~/assets/plugins/apexchart/apexcharts.min.js"></script>
+    <script src="~/assets/plugins/apexchart/chart-data.js"></script>
+    <script src="~/assets/plugins/sweetalert/sweetalert2.all.min.js"></script>
+    <script src="~/assets/plugins/sweetalert/sweetalerts.min.js"></script>
+    <script src="~/assets/js/script.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("Notyf")
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+<!-- Mirrored from kanakku.dreamguystech.com/html/template/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 21 Jul 2023 05:49:35 GMT -->
+</html>
+
